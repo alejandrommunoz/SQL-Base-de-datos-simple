@@ -3,11 +3,11 @@
 -- Descripción: Este script crea una base de datos básica para gestionar empleados, departamentos y proyectos.
 
 -- Crear la base de datos
-CREATE DATABASE CompanyDB;
+CREATE DATABASE AlejandroSL;
 GO
 
 -- Usar la base de datos
-USE CompanyDB;
+USE AlejandroSL;
 GO
 
 -- 📁 Tabla de Departamentos
