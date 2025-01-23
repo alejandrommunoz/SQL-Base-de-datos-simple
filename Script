@@ -1,0 +1,89 @@
+-- 🌟 Creación de una base de datos para gestión empresarial
+-- Autor: Alejandro Montoya
+-- Descripción: Este script crea una base de datos básica para gestionar empleados, departamentos y proyectos.
+
+-- Crear la base de datos
+CREATE DATABASE CompanyDB;
+GO
+
+-- Usar la base de datos
+USE CompanyDB;
+GO
+
+-- 📁 Tabla de Departamentos
+CREATE TABLE Departments (
+    DepartmentID INT PRIMARY KEY IDENTITY(1,1),
+    DepartmentName NVARCHAR(100) NOT NULL,
+    CreatedDate DATE DEFAULT GETDATE()
+);
+GO
+
+-- 👨‍💼 Tabla de Empleados
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY IDENTITY(1,1),
+    FirstName NVARCHAR(50) NOT NULL,
+    LastName NVARCHAR(50) NOT NULL,
+    Email NVARCHAR(100) UNIQUE NOT NULL,
+    HireDate DATE DEFAULT GETDATE(),
+    DepartmentID INT FOREIGN KEY REFERENCES Departments(DepartmentID),
+    Salary DECIMAL(10, 2) NOT NULL
+);
+GO
+
+-- 🗂️ Tabla de Proyectos
+CREATE TABLE Projects (
+    ProjectID INT PRIMARY KEY IDENTITY(1,1),
+    ProjectName NVARCHAR(100) NOT NULL,
+    Budget DECIMAL(12, 2) NOT NULL,
+    StartDate DATE NOT NULL,
+    EndDate DATE,
+    DepartmentID INT FOREIGN KEY REFERENCES Departments(DepartmentID)
+);
+GO
+
+-- 🔗 Tabla intermedia para asignar empleados a proyectos
+CREATE TABLE EmployeeProjects (
+    EmployeeProjectID INT PRIMARY KEY IDENTITY(1,1),
+    EmployeeID INT FOREIGN KEY REFERENCES Employees(EmployeeID),
+    ProjectID INT FOREIGN KEY REFERENCES Projects(ProjectID),
+    AssignedDate DATE DEFAULT GETDATE()
+);
+GO
+
+-- 📊 Insertar datos de ejemplo
+-- Departamentos
+INSERT INTO Departments (DepartmentName) VALUES 
+('Recursos Humanos'),
+('Tecnología'),
+('Finanzas');
+
+-- Empleados
+INSERT INTO Employees (FirstName, LastName, Email, DepartmentID, Salary) VALUES
+('Alejandro', 'Montoya', 'alejandro.montoya@example.com', 2, 3500.00),
+('Sofia', 'Lopez', 'sofia.lopez@example.com', 1, 2800.00),
+('Carlos', 'Perez', 'carlos.perez@example.com', 3, 4000.00);
+
+-- Proyectos
+INSERT INTO Projects (ProjectName, Budget, StartDate, DepartmentID) VALUES
+('Implementación SAP', 100000.00, '2025-01-01', 2),
+('Capacitación de Personal', 20000.00, '2025-02-01', 1),
+('Optimización Financiera', 50000.00, '2025-03-01', 3);
+
+-- Asignar empleados a proyectos
+INSERT INTO EmployeeProjects (EmployeeID, ProjectID) VALUES
+(1, 1), -- Alejandro en Implementación SAP
+(2, 2), -- Sofia en Capacitación de Personal
+(3, 3); -- Carlos en Optimización Financiera
+GO
+
+-- ✅ Consulta de prueba para verificar los datos
+SELECT 
+    e.FirstName + ' ' + e.LastName AS EmployeeName,
+    p.ProjectName,
+    d.DepartmentName,
+    ep.AssignedDate
+FROM EmployeeProjects ep
+INNER JOIN Employees e ON ep.EmployeeID = e.EmployeeID
+INNER JOIN Projects p ON ep.ProjectID = p.ProjectID
+INNER JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+GO
