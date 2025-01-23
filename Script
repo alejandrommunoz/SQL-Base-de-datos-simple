@@ -1,6 +1,6 @@
 -- 🌟 Creación de una base de datos para gestión empresarial
 -- Autor: Alejandro Montoya
--- Descripción: Este script crea una base de datos básica para gestionar empleados, departamentos y proyectos.
+-- Descripción: base de datos básica para gestionar empleados, departamentos y proyectos.
 
 -- Crear la base de datos
 CREATE DATABASE AlejandroSL;
